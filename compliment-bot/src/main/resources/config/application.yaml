@@ -1,0 +1,9 @@
+application:
+  integration:
+    client:
+      romantic-collection:
+        url: https://love.romanticcollection.ru/blog/500-trogatelnyh-komplimentov-devushke/
+        read-timeout: 5000
+      infoniac:
+        url: https://www.infoniac.ru/news/150-komplimentov-cheloveku-priyatnye-slova-kotorye-podnimut-nastroenie-lyubomu.html
+        read-timeout: 5000
