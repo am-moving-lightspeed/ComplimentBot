@@ -7,9 +7,11 @@ import static java.util.stream.Collectors.toSet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.am_moving_lightspeed.compliment_bot.converter.Converter;
 import com.github.am_moving_lightspeed.compliment_bot.domain.model.Compliment;
+import com.github.am_moving_lightspeed.compliment_bot.domain.model.User;
 import com.github.am_moving_lightspeed.compliment_bot.infrastructure.exception.ServiceException;
 import com.github.am_moving_lightspeed.compliment_bot.persistence.model.ComplimentDao;
 import com.github.am_moving_lightspeed.compliment_bot.persistence.model.StorageDao;
+import com.github.am_moving_lightspeed.compliment_bot.persistence.model.UserDao;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -23,13 +25,16 @@ import org.springframework.stereotype.Service;
 public class StoragePersistenceService {
 
     private final Converter<Compliment, ComplimentDao> complimentConverter;
+    private final Converter<User, UserDao> userConverter;
     private final Path storageLocation;
     private final ObjectMapper objectMapper;
 
     public StoragePersistenceService(@Value("${application.storage.location}") String storageLocation,
                                      Converter<Compliment, ComplimentDao> complimentConverter,
+                                     Converter<User, UserDao> userConverter,
                                      ObjectMapper objectMapper) {
         this.complimentConverter = complimentConverter;
+        this.userConverter = userConverter;
         this.objectMapper = objectMapper;
         this.storageLocation = Path.of(storageLocation);
     }
@@ -47,6 +52,20 @@ public class StoragePersistenceService {
                                     .filter(complimentDao -> !used.contains(complimentDao.getHash()))
                                     .collect(toSet());
         storage.getPendingCompliments().addAll(newContent);
+        flushStorage(storage);
+    }
+
+    public void saveUser(User user) {
+        var userDao = userConverter.convert(user);
+        var storage = getStorage();
+        storage.getUsers().add(userDao);
+        flushStorage(storage);
+    }
+
+    public void removeUser(User user) {
+        var userDao = userConverter.convert(user);
+        var storage = getStorage();
+        storage.getUsers().remove(userDao);
         flushStorage(storage);
     }
 
