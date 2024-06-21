@@ -1,4 +1,5 @@
 application:
+  id: clxox1usm00005k91h5eqfelw
   bot:
     token: #
     username: Валентин-джентльмен бот
@@ -10,3 +11,5 @@ application:
       infoniac:
         url: https://www.infoniac.ru/news/150-komplimentov-cheloveku-priyatnye-slova-kotorye-podnimut-nastroenie-lyubomu.html
         read-timeout: 5000
+  storage:
+    location: /opt/tg-bots/${id}/storage.json
