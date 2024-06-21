@@ -11,6 +11,15 @@ public class Constants {
         public static final String FAILED_TO_FETCH_CONTENT = "failed.to.fetch.content";
         public static final String FAILED_TO_READ_FROM_STORAGE = "failed.to.read.from.storage";
         public static final String FAILED_TO_FLUSH_TO_STORAGE = "failed.to.flush.to.storage";
+        public static final String FAILED_TO_HANDLE_USER_REQUEST = "failed.to.handle.user.request";
+    }
+
+    @UtilityClass
+    public static class Messages {
+
+        public static final String BOT_START_COMMAND_RESPONSE = "bot.command.start.response";
+        public static final String BOT_HELP_COMMAND_RESPONSE = "bot.command.help.response";
+        public static final String BOT_UNSUBSCRIBE_COMMAND_RESPONSE = "bot.command.unsubscribe.response";
     }
 
     @UtilityClass
@@ -36,5 +45,19 @@ public class Constants {
     public static class Executors {
 
         public static final String INTEGRATION_CLIENT_EXECUTOR = "integration-client";
+    }
+
+    @UtilityClass
+    public static class BotCommands {
+
+        public static final String START = "/start";
+        public static final String HELP = "/help";
+        public static final String UNSUBSCRIBE = "/unsubscribe";
+    }
+
+    @UtilityClass
+    public static class Encodings {
+
+        public static final String UTF_8 = "UTF-8";
     }
 }
