@@ -1,13 +1,19 @@
 package com.github.am_moving_lightspeed.compliment_bot.persistence.service;
 
+import static com.github.am_moving_lightspeed.compliment_bot.util.Constants.Errors.FAILED_TO_FLUSH_TO_STORAGE;
 import static com.github.am_moving_lightspeed.compliment_bot.util.Constants.Errors.FAILED_TO_READ_FROM_STORAGE;
+import static java.util.stream.Collectors.toSet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.am_moving_lightspeed.compliment_bot.converter.Converter;
+import com.github.am_moving_lightspeed.compliment_bot.domain.model.Compliment;
 import com.github.am_moving_lightspeed.compliment_bot.infrastructure.exception.ServiceException;
+import com.github.am_moving_lightspeed.compliment_bot.persistence.model.ComplimentDao;
 import com.github.am_moving_lightspeed.compliment_bot.persistence.model.StorageDao;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,13 +22,32 @@ import org.springframework.stereotype.Service;
 @Service
 public class StoragePersistenceService {
 
+    private final Converter<Compliment, ComplimentDao> complimentConverter;
     private final Path storageLocation;
     private final ObjectMapper objectMapper;
 
     public StoragePersistenceService(@Value("${application.storage.location}") String storageLocation,
+                                     Converter<Compliment, ComplimentDao> complimentConverter,
                                      ObjectMapper objectMapper) {
+        this.complimentConverter = complimentConverter;
         this.objectMapper = objectMapper;
         this.storageLocation = Path.of(storageLocation);
+    }
+
+    public boolean hasContent() {
+        var storage = getStorage();
+        return !storage.getPendingCompliments().isEmpty();
+    }
+
+    public void saveCompliments(Set<Compliment> compliments) {
+        var storage = getStorage();
+        var used = storage.getUsedComplimentsHashes();
+        var newContent = compliments.stream()
+                                    .map(complimentConverter::convert)
+                                    .filter(complimentDao -> !used.contains(complimentDao.getHash()))
+                                    .collect(toSet());
+        storage.getPendingCompliments().addAll(newContent);
+        flushStorage(storage);
     }
 
     private StorageDao getStorage() {
@@ -32,6 +57,16 @@ public class StoragePersistenceService {
         } catch (IOException exception) {
             log.error("Failed to from storage. Nested exception:", exception);
             throw new ServiceException(FAILED_TO_READ_FROM_STORAGE, exception);
+        }
+    }
+
+    private void flushStorage(StorageDao storage) {
+        try {
+            var storageFile = getStorageFile();
+            objectMapper.writeValue(storageFile, storage);
+        } catch (IOException exception) {
+            log.error("Failed to flush content to storage. Nested exception:", exception);
+            throw new ServiceException(FAILED_TO_FLUSH_TO_STORAGE, exception);
         }
     }
 
