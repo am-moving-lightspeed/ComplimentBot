@@ -7,9 +7,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@EqualsAndHashCode
 @AllArgsConstructor
-public class Content {
+@EqualsAndHashCode
+public class Compliment {
 
-    private String value;
+    private String content;
 }

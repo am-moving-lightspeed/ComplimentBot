@@ -9,6 +9,7 @@ public class Constants {
     public static class Errors {
 
         public static final String FAILED_TO_FETCH_CONTENT = "failed.to.fetch.content";
+        public static final String FAILED_TO_READ_FROM_STORAGE = "failed.to.read.from.storage";
     }
 
     @UtilityClass

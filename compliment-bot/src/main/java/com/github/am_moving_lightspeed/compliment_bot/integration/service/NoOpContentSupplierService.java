@@ -1,6 +1,6 @@
 package com.github.am_moving_lightspeed.compliment_bot.integration.service;
 
-import com.github.am_moving_lightspeed.compliment_bot.domain.model.Content;
+import com.github.am_moving_lightspeed.compliment_bot.domain.model.Compliment;
 import java.util.Set;
 import org.springframework.stereotype.Service;
 
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class NoOpContentSupplierService implements ContentSupplierService {
 
     @Override
-    public Set<Content> getContent() {
+    public Set<Compliment> getContent() {
         return Set.of();
     }
 }
