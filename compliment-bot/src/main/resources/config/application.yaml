@@ -12,4 +12,4 @@ application:
         url: https://www.infoniac.ru/news/150-komplimentov-cheloveku-priyatnye-slova-kotorye-podnimut-nastroenie-lyubomu.html
         read-timeout: 5000
   storage:
-    location: /opt/tg-bots/${ id }/storage.json
+    location: /opt/tg-bots/${id}/storage.json

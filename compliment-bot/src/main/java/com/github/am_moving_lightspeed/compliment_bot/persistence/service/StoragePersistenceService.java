@@ -43,8 +43,8 @@ public class StoragePersistenceService {
                 parentFile.mkdirs();
             }
             storageFile.createNewFile();
+            objectMapper.writeValue(storageFile, new StorageDao());
         }
-        objectMapper.writeValue(storageFile, new StorageDao());
         return storageFile;
     }
 }
