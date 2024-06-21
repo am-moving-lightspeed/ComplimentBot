@@ -1,15 +1,14 @@
 package com.github.am_moving_lightspeed.compliment_bot.persistence.model;
 
-import lombok.Setter;
-
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Setter;
 
 @Setter
 public class StorageDao {
 
     private Set<ComplimentDao> pendingCompliments;
-    private Set<String> usedComplimentsHashes;
+    private Set<Integer> usedComplimentsHashes;
     private Set<UserDao> users;
 
     public Set<ComplimentDao> getPendingCompliments() {
@@ -19,7 +18,7 @@ public class StorageDao {
         return pendingCompliments;
     }
 
-    public Set<String> getUsedComplimentsHashes() {
+    public Set<Integer> getUsedComplimentsHashes() {
         if (usedComplimentsHashes == null) {
             usedComplimentsHashes = new HashSet<>();
         }

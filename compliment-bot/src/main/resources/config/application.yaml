@@ -1,5 +1,11 @@
 application:
   id: clxox1usm00005k91h5eqfelw
+  async:
+    executor:
+      - name: integration-client
+        core-pool-size: 2
+        max-pool-size: 2
+        queue-capacity: 10
   bot:
     token: #
     username: Валентин-джентльмен бот

@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class ConverterConfiguration {
 
     @Bean
-    public Converter<Compliment, ComplimentDao> complimentToComplimentDaoConverter() {
+    public Converter<Compliment, ComplimentDao> complimentConverter() {
         return new ConverterDecorator<>(new ComplimentToComplimentDaoConverter());
     }
 }
