@@ -1,4 +1,7 @@
 application:
+  bot:
+    token: #
+    username: Валентин-джентльмен бот
   integration:
     client:
       romantic-collection:
