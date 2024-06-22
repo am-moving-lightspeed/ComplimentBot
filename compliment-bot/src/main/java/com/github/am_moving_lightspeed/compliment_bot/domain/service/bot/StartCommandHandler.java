@@ -34,8 +34,12 @@ public class StartCommandHandler extends BaseCommandHandler {
     @Override
     protected CommandHandlerResult handleInternally(Request request) {
         var userId = request.getUserId();
+        var exists = storagePersistenceService.getUsers().stream()
+                                              .anyMatch(user -> user.getId().equals(userId));
+        if (exists) {
+            return CommandHandlerResult.empty();
+        }
         storagePersistenceService.saveUser(new User(userId));
-
         applicationEventPublisher.publishEvent(new UserSubscribedEvent(userId));
 
         var responseMessage = getResponseMessage(BOT_START_COMMAND_RESPONSE);

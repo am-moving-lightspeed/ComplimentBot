@@ -34,8 +34,12 @@ public class UnsubscribeCommandHandler extends BaseCommandHandler {
     @Override
     protected CommandHandlerResult handleInternally(Request request) {
         var userId = request.getUserId();
+        var exists = storagePersistenceService.getUsers().stream()
+                                              .anyMatch(user -> user.getId().equals(userId));
+        if (!exists) {
+            return CommandHandlerResult.empty();
+        }
         storagePersistenceService.removeUser(new User(userId));
-
         applicationEventPublisher.publishEvent(new UserUnsubscribedEvent(userId));
 
         var responseMessage = getResponseMessage(BOT_UNSUBSCRIBE_COMMAND_RESPONSE);
