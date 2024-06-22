@@ -54,9 +54,14 @@ public class BotService extends TelegramLongPollingBot {
     }
 
     public void sendMessage(String chatId, String message) {
+        sendMessage(chatId, message, false);
+    }
+
+    public void sendMessage(String chatId, String message, boolean silent) {
         var sendMessageMethod = SendMessage.builder()
                                            .chatId(chatId)
                                            .text(message)
+                                           .disableNotification(silent)
                                            .build();
         try {
             execute(sendMessageMethod);

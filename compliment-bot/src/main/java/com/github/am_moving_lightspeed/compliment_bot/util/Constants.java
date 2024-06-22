@@ -81,4 +81,10 @@ public class Constants {
         public static final LocalTime RIGHT_BEFORE_MIDNIGHT = MIDNIGHT.minusNanos(1);
         public static final LocalTime RIGHT_AFTER_MIDNIGHT = MIDNIGHT.plusNanos(1);
     }
+
+    @UtilityClass
+    public static class Logging {
+
+        public static final String PATTERN = "%d{yyyy-MM-dd HH:mm:ss} %-5level [%t] [%logger{40}]: %m%n%ex";
+    }
 }
