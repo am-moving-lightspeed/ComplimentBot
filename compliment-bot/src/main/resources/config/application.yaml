@@ -6,7 +6,11 @@ application:
         core-pool-size: 2
         max-pool-size: 2
         queue-capacity: 10
+      - name: scheduler
+        core-pool-size: 2
   bot:
+    admin:
+      id: #
     token: #
     username: Валентин-джентльмен бот
   integration:
@@ -19,3 +23,4 @@ application:
         read-timeout: 5000
   storage:
     location: /opt/tg-bots/${id}/storage.json
+    backup-time: '18:00'  # UTC

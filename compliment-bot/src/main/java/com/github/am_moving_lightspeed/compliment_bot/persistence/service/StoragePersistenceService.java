@@ -1,6 +1,7 @@
 package com.github.am_moving_lightspeed.compliment_bot.persistence.service;
 
 import static com.github.am_moving_lightspeed.compliment_bot.util.Constants.Errors.FAILED_TO_FLUSH_TO_STORAGE;
+import static com.github.am_moving_lightspeed.compliment_bot.util.Constants.Errors.FAILED_TO_OBTAIN_STORAGE_FILE_DESCRIPTOR;
 import static com.github.am_moving_lightspeed.compliment_bot.util.Constants.Errors.FAILED_TO_READ_FROM_STORAGE;
 import static java.util.stream.Collectors.toSet;
 
@@ -69,12 +70,26 @@ public class StoragePersistenceService {
         flushStorage(storage);
     }
 
+    public File getStorageFile(boolean rethrowException) {
+        try {
+            return getStorageFile();
+        } catch (IOException exception) {
+            log.error("Failed to obtain storage file descriptor. Nested exception", exception);
+
+            if (rethrowException) {
+                throw new ServiceException(FAILED_TO_OBTAIN_STORAGE_FILE_DESCRIPTOR, exception);
+            } else {
+                return null;
+            }
+        }
+    }
+
     private StorageDao getStorage() {
         try {
             var storageFile = getStorageFile();
             return objectMapper.readValue(storageFile, StorageDao.class);
         } catch (IOException exception) {
-            log.error("Failed to from storage. Nested exception:", exception);
+            log.error("Failed to read from storage. Nested exception:", exception);
             throw new ServiceException(FAILED_TO_READ_FROM_STORAGE, exception);
         }
     }

@@ -1,12 +1,18 @@
 package com.github.am_moving_lightspeed.compliment_bot.domain.service.bot;
 
+import static com.github.am_moving_lightspeed.compliment_bot.util.Constants.Backup.BACKUP_FILE_NAME;
+
+import com.github.am_moving_lightspeed.compliment_bot.config.model.BotProperties;
 import com.github.am_moving_lightspeed.compliment_bot.converter.Converter;
 import com.github.am_moving_lightspeed.compliment_bot.domain.model.bot.Request;
+import com.github.am_moving_lightspeed.compliment_bot.infrastructure.exception.BotApiException;
+import java.io.File;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -14,23 +20,18 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @RequiredArgsConstructor
 public class BotService extends TelegramLongPollingBot {
 
-    @Value("${application.bot.token}")
-    private final String token;
-
-    @Value("${application.bot.username}")
-    private final String username;
-
-    private final Converter<Update, Request> updateToRequestConverter;
     private final BotCommandHandlerChain handlerChain;
+    private final BotProperties properties;
+    private final Converter<Update, Request> updateToRequestConverter;
 
     @Override
     public String getBotUsername() {
-        return username;
+        return properties.getUsername();
     }
 
     @Override
     public String getBotToken() {
-        return token;
+        return properties.getToken();
     }
 
     @Override
@@ -48,7 +49,22 @@ public class BotService extends TelegramLongPollingBot {
         try {
             execute(sendMessageMethod);
         } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
+            throw new BotApiException(e);
+        }
+    }
+
+    public void sendDocument(File document) {
+        var inputFile = new InputFile(document, BACKUP_FILE_NAME);
+        var sendDocumentMethod = SendDocument.builder()
+                                             .chatId(properties.getAdmin().getId())
+                                             .document(inputFile)
+                                             .disableContentTypeDetection(true)
+                                             .disableNotification(true)
+                                             .build();
+        try {
+            execute(sendDocumentMethod);
+        } catch (TelegramApiException e) {
+            throw new BotApiException(e);
         }
     }
 }

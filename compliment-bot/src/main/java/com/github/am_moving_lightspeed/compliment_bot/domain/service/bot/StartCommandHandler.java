@@ -6,18 +6,23 @@ import static com.github.am_moving_lightspeed.compliment_bot.util.Constants.Mess
 import com.github.am_moving_lightspeed.compliment_bot.domain.model.User;
 import com.github.am_moving_lightspeed.compliment_bot.domain.model.bot.CommandHandlerResult;
 import com.github.am_moving_lightspeed.compliment_bot.domain.model.bot.Request;
+import com.github.am_moving_lightspeed.compliment_bot.domain.model.event.UserSubscribedEvent;
 import com.github.am_moving_lightspeed.compliment_bot.persistence.service.StoragePersistenceService;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 @Component
 public class StartCommandHandler extends BaseCommandHandler {
 
+    private final ApplicationEventPublisher applicationEventPublisher;
     private final StoragePersistenceService storagePersistenceService;
 
     public StartCommandHandler(MessageSource messages,
+                               ApplicationEventPublisher applicationEventPublisher,
                                StoragePersistenceService storagePersistenceService) {
         super(messages);
+        this.applicationEventPublisher = applicationEventPublisher;
         this.storagePersistenceService = storagePersistenceService;
     }
 
@@ -28,7 +33,11 @@ public class StartCommandHandler extends BaseCommandHandler {
 
     @Override
     protected CommandHandlerResult handleInternally(Request request) {
-        storagePersistenceService.saveUser(new User(request.getUserId()));
+        var userId = request.getUserId();
+        storagePersistenceService.saveUser(new User(userId));
+
+        applicationEventPublisher.publishEvent(new UserSubscribedEvent(userId));
+
         var responseMessage = getResponseMessage(BOT_START_COMMAND_RESPONSE);
         return new CommandHandlerResult(responseMessage);
     }
