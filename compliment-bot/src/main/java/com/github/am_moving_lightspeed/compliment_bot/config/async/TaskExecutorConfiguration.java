@@ -1,5 +1,6 @@
 package com.github.am_moving_lightspeed.compliment_bot.config.async;
 
+import static com.github.am_moving_lightspeed.compliment_bot.util.Constants.Executors.BROADCAST;
 import static com.github.am_moving_lightspeed.compliment_bot.util.Constants.Executors.INTEGRATION_CLIENT_EXECUTOR;
 import static com.github.am_moving_lightspeed.compliment_bot.util.Constants.Executors.SCHEDULER;
 
@@ -21,6 +22,16 @@ public class TaskExecutorConfiguration {
     @Bean
     public TaskExecutor integrationClientTaskExecutor() {
         var executorProperties = executorsProperties.get(INTEGRATION_CLIENT_EXECUTOR);
+        var executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(executorProperties.getCorePoolSize());
+        executor.setMaxPoolSize(executorProperties.getMaxPoolSize());
+        executor.setQueueCapacity(executorProperties.getQueueCapacity());
+        return executor;
+    }
+
+    @Bean
+    public TaskExecutor broadcastTaskExecutor() {
+        var executorProperties = executorsProperties.get(BROADCAST);
         var executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(executorProperties.getCorePoolSize());
         executor.setMaxPoolSize(executorProperties.getMaxPoolSize());

@@ -6,6 +6,10 @@ application:
         core-pool-size: 2
         max-pool-size: 2
         queue-capacity: 10
+      - name: broadcast
+        core-pool-size: 5
+        max-pool-size: 10
+        queue-capacity: 100
       - name: scheduler
         core-pool-size: 2
   bot:
@@ -13,6 +17,12 @@ application:
       id: #
     token: #
     username: Валентин-джентльмен бот
+  broadcast:
+    blackout:
+      start: '19:00'  # UTC
+      end: '06:00'  # UTC
+    initial-time: '08:00'  # UTC
+    interval: 25200  # Seconds. 7 hours by default
   integration:
     client:
       romantic-collection:
@@ -22,5 +32,5 @@ application:
         url: https://www.infoniac.ru/news/150-komplimentov-cheloveku-priyatnye-slova-kotorye-podnimut-nastroenie-lyubomu.html
         read-timeout: 5000
   storage:
-    location: /opt/tg-bots/${id}/storage.json
     backup-time: '18:00'  # UTC
+    location: /opt/tg-bots/${id}/storage.json

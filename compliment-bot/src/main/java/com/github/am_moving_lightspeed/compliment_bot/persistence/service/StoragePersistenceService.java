@@ -42,7 +42,15 @@ public class StoragePersistenceService {
 
     public boolean hasContent() {
         var storage = getStorage();
-        return !storage.getPendingCompliments().isEmpty();
+        return !storage.getPendingCompliments().isEmpty()
+            || !storage.getUsedComplimentsHashes().isEmpty();
+    }
+
+    public Set<Compliment> getCompliments() {
+        var storage = getStorage();
+        return storage.getPendingCompliments().stream()
+                      .map(complimentConverter::reverseConvert)
+                      .collect(toSet());
     }
 
     public void saveCompliments(Set<Compliment> compliments) {
@@ -54,6 +62,28 @@ public class StoragePersistenceService {
                                     .collect(toSet());
         storage.getPendingCompliments().addAll(newContent);
         flushStorage(storage);
+    }
+
+    public Set<Integer> getUsedComplimentsHashes() {
+        return getStorage().getUsedComplimentsHashes();
+    }
+
+    public void saveUsedComplimentsHashes(Set<Integer> usedComplimentsHashes) {
+        var storage = getStorage();
+        storage.setUsedComplimentsHashes(usedComplimentsHashes);
+        flushStorage(storage);
+    }
+
+    public void clearUsedComplimentsHashes() {
+        var storage = getStorage();
+        storage.getUsedComplimentsHashes().clear();
+        flushStorage(storage);
+    }
+
+    public Set<User> getUsers() {
+        return getStorage().getUsers().stream()
+                           .map(userConverter::reverseConvert)
+                           .collect(toSet());
     }
 
     public void saveUser(User user) {

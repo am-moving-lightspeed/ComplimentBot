@@ -53,6 +53,18 @@ public class BotService extends TelegramLongPollingBot {
         }
     }
 
+    public void sendMessage(String chatId, String message) {
+        var sendMessageMethod = SendMessage.builder()
+                                           .chatId(chatId)
+                                           .text(message)
+                                           .build();
+        try {
+            execute(sendMessageMethod);
+        } catch (TelegramApiException e) {
+            throw new BotApiException(e);
+        }
+    }
+
     public void sendDocument(File document) {
         var inputFile = new InputFile(document, BACKUP_FILE_NAME);
         var sendDocumentMethod = SendDocument.builder()
