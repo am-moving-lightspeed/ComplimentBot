@@ -1,13 +1,13 @@
 package com.github.am_moving_lightspeed.compliment_bot.domain.service;
 
-import static java.time.LocalTime.MIDNIGHT;
+import static com.github.am_moving_lightspeed.compliment_bot.util.Constants.DateTime.RIGHT_AFTER_MIDNIGHT;
+import static com.github.am_moving_lightspeed.compliment_bot.util.Constants.DateTime.RIGHT_BEFORE_MIDNIGHT;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ISO_TIME;
 
 import com.github.am_moving_lightspeed.compliment_bot.config.model.BroadcastProperties;
 import com.github.am_moving_lightspeed.compliment_bot.domain.service.bot.BotService;
 import com.github.am_moving_lightspeed.compliment_bot.persistence.service.StoragePersistenceService;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import lombok.RequiredArgsConstructor;
@@ -30,31 +30,19 @@ public class BroadcastService {
 
     @EventListener(ApplicationReadyEvent.class)
     public void scheduleBroadcast() {
-        var initialTime = ZonedDateTime.of(LocalDate.now(),
-                                           LocalTime.parse(properties.getInitialTime(), ISO_TIME),
-                                           UTC);
-        var calculatedBroadcastTime = ZonedDateTime.now(UTC).isAfter(initialTime)
-            ? initialTime.plusSeconds(properties.getInterval())
-            : initialTime;
-        taskScheduler.schedule(() -> performBroadcastAndReschedule(calculatedBroadcastTime),
-                               calculatedBroadcastTime.toInstant());
+        var nextBroadcastTime = getNextBroadcastTime();
+        taskScheduler.schedule(this::performBroadcastAndReschedule,
+                               nextBroadcastTime.toInstant());
     }
 
-    private void performBroadcastAndReschedule(ZonedDateTime broadcastDateTime) {
-        broadcast();
-        rescheduleBroadcast(broadcastDateTime);
-    }
-
-    private void rescheduleBroadcast(ZonedDateTime previousBroadcastDateTime) {
+    private ZonedDateTime getNextBroadcastTime() {
         var interval = properties.getInterval();
-        var nextBroadcastTime = previousBroadcastDateTime.plusSeconds(interval);
+        var broadcastDateTime = ZonedDateTime.now(UTC).plusSeconds(interval);
 
-        while (isInBlackout(nextBroadcastTime)) {
-            nextBroadcastTime = nextBroadcastTime.plusSeconds(interval);
+        while (isInBlackout(broadcastDateTime)) {
+            broadcastDateTime = broadcastDateTime.plusSeconds(interval);
         }
-        var calculatedBroadcastTime = nextBroadcastTime;
-        taskScheduler.schedule(() -> performBroadcastAndReschedule(calculatedBroadcastTime),
-                               calculatedBroadcastTime.toInstant());
+        return broadcastDateTime;
     }
 
     private boolean isInBlackout(ZonedDateTime broadcastDateTime) {
@@ -62,11 +50,16 @@ public class BroadcastService {
         var blackoutEnd = LocalTime.parse(properties.getBlackout().getEnd(), ISO_TIME);
         var broadcastTime = broadcastDateTime.toLocalTime();
 
-        if (broadcastTime.isAfter(blackoutStart) && broadcastTime.isBefore(MIDNIGHT)) {
+        if (broadcastTime.isAfter(blackoutStart) && broadcastTime.isBefore(RIGHT_BEFORE_MIDNIGHT)) {
             return true;
         } else {
-            return broadcastTime.isAfter(MIDNIGHT) && broadcastTime.isBefore(blackoutEnd);
+            return broadcastTime.isAfter(RIGHT_AFTER_MIDNIGHT) && broadcastTime.isBefore(blackoutEnd);
         }
+    }
+
+    private void performBroadcastAndReschedule() {
+        broadcast();
+        scheduleBroadcast();
     }
 
     private void broadcast() {

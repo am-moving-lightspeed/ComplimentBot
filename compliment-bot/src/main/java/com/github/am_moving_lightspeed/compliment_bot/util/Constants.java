@@ -1,5 +1,8 @@
 package com.github.am_moving_lightspeed.compliment_bot.util;
 
+import static java.time.LocalTime.MIDNIGHT;
+
+import java.time.LocalTime;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -70,5 +73,12 @@ public class Constants {
     public static class Backup {
 
         public static final String BACKUP_FILE_NAME = "backup.json";
+    }
+
+    @UtilityClass
+    public static class DateTime {
+
+        public static final LocalTime RIGHT_BEFORE_MIDNIGHT = MIDNIGHT.minusNanos(1);
+        public static final LocalTime RIGHT_AFTER_MIDNIGHT = MIDNIGHT.plusNanos(1);
     }
 }

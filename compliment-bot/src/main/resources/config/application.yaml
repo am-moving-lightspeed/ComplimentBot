@@ -21,7 +21,6 @@ application:
     blackout:
       start: '19:00'  # UTC
       end: '06:00'  # UTC
-    initial-time: '08:00'  # UTC
     interval: 25200  # Seconds. 7 hours by default
   integration:
     client:

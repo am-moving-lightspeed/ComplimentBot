@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 public class BroadcastProperties {
 
     private Blackout blackout;
-    private String initialTime;
     private Integer interval;
 
     @Getter
