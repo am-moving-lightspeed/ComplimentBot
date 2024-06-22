@@ -20,10 +20,9 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @RequiredArgsConstructor
 public class BotService extends TelegramLongPollingBot {
 
-    private final BotProperties properties;
-
-    private final Converter<Update, Request> updateToRequestConverter;
     private final BotCommandHandlerChain handlerChain;
+    private final BotProperties properties;
+    private final Converter<Update, Request> updateToRequestConverter;
 
     @Override
     public String getBotUsername() {
