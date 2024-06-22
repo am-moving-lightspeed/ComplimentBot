@@ -6,18 +6,23 @@ import static com.github.am_moving_lightspeed.compliment_bot.util.Constants.Mess
 import com.github.am_moving_lightspeed.compliment_bot.domain.model.User;
 import com.github.am_moving_lightspeed.compliment_bot.domain.model.bot.CommandHandlerResult;
 import com.github.am_moving_lightspeed.compliment_bot.domain.model.bot.Request;
+import com.github.am_moving_lightspeed.compliment_bot.domain.model.event.UserUnsubscribedEvent;
 import com.github.am_moving_lightspeed.compliment_bot.persistence.service.StoragePersistenceService;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UnsubscribeCommandHandler extends BaseCommandHandler {
 
+    private final ApplicationEventPublisher applicationEventPublisher;
     private final StoragePersistenceService storagePersistenceService;
 
     public UnsubscribeCommandHandler(MessageSource messages,
+                                     ApplicationEventPublisher applicationEventPublisher,
                                      StoragePersistenceService storagePersistenceService) {
         super(messages);
+        this.applicationEventPublisher = applicationEventPublisher;
         this.storagePersistenceService = storagePersistenceService;
     }
 
@@ -28,7 +33,11 @@ public class UnsubscribeCommandHandler extends BaseCommandHandler {
 
     @Override
     protected CommandHandlerResult handleInternally(Request request) {
-        storagePersistenceService.removeUser(new User(request.getUserId()));
+        var userId = request.getUserId();
+        storagePersistenceService.removeUser(new User(userId));
+
+        applicationEventPublisher.publishEvent(new UserUnsubscribedEvent(userId));
+
         var responseMessage = getResponseMessage(BOT_UNSUBSCRIBE_COMMAND_RESPONSE);
         return new CommandHandlerResult(responseMessage);
     }

@@ -8,10 +8,13 @@ public class Constants {
     @UtilityClass
     public static class Errors {
 
+        public static final String BOT_API_EXCEPTION = "bot.api.exception";
         public static final String FAILED_TO_FETCH_CONTENT = "failed.to.fetch.content";
         public static final String FAILED_TO_READ_FROM_STORAGE = "failed.to.read.from.storage";
         public static final String FAILED_TO_FLUSH_TO_STORAGE = "failed.to.flush.to.storage";
         public static final String FAILED_TO_HANDLE_USER_REQUEST = "failed.to.handle.user.request";
+        public static final String FAILED_TO_OBTAIN_STORAGE_FILE_DESCRIPTOR
+            = "failed.to.obtain.storage.file.descriptor";
     }
 
     @UtilityClass
@@ -45,6 +48,7 @@ public class Constants {
     public static class Executors {
 
         public static final String INTEGRATION_CLIENT_EXECUTOR = "integration-client";
+        public static final String SCHEDULER = "scheduler";
     }
 
     @UtilityClass
@@ -59,5 +63,11 @@ public class Constants {
     public static class Encodings {
 
         public static final String UTF_8 = "UTF-8";
+    }
+
+    @UtilityClass
+    public static class Backup {
+
+        public static final String BACKUP_FILE_NAME = "backup.json";
     }
 }
