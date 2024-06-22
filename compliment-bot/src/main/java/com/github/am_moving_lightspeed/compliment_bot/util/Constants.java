@@ -47,6 +47,7 @@ public class Constants {
     @UtilityClass
     public static class Executors {
 
+        public static final String BROADCAST = "broadcast";
         public static final String INTEGRATION_CLIENT_EXECUTOR = "integration-client";
         public static final String SCHEDULER = "scheduler";
     }
