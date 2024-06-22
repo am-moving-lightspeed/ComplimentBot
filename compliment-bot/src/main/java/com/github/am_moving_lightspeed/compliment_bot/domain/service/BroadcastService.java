@@ -33,7 +33,7 @@ public class BroadcastService {
         var initialTime = ZonedDateTime.of(LocalDate.now(),
                                            LocalTime.parse(properties.getInitialTime(), ISO_TIME),
                                            UTC);
-        var calculatedBroadcastTime = ZonedDateTime.now(UTC).isBefore(initialTime)
+        var calculatedBroadcastTime = ZonedDateTime.now(UTC).isAfter(initialTime)
             ? initialTime.plusSeconds(properties.getInterval())
             : initialTime;
         taskScheduler.schedule(() -> performBroadcastAndReschedule(calculatedBroadcastTime),
