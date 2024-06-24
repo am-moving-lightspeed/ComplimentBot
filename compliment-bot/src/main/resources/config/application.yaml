@@ -1,5 +1,4 @@
 application:
-  id: clxox1usm00005k91h5eqfelw
   async:
     executor:
       - name: integration-client
@@ -14,14 +13,14 @@ application:
         core-pool-size: 2
   bot:
     admin:
-      id: #
-    token: #
-    username: Валентин-джентльмен бот
+      id: ${APP_ADMIN_ID:}
+    token: ${APP_BOT_TOKEN:}
+    username: ValentinGentlemanBot
   broadcast:
     blackout:
       start: '19:00'  # UTC
       end: '06:00'  # UTC
-    interval: 25200  # Seconds. 7 hours by default
+    interval: 25200  # Seconds
   integration:
     client:
       romantic-collection:
@@ -32,4 +31,4 @@ application:
         read-timeout: 5000
   storage:
     backup-time: '18:00'  # UTC
-    location: /opt/tg-bots/${id}/storage.json
+    location: /opt/tg-bots/compliment-bot/storage.json
