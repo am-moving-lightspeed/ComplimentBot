@@ -23,6 +23,9 @@ application:
     interval: 25200  # Seconds
   integration:
     client:
+      dropbox:
+        name: compliment-bot-backup-client
+        access-token: ${APP_DBX_ACCESS_TOKEN:}
       romantic-collection:
         url: https://love.romanticcollection.ru/blog/500-trogatelnyh-komplimentov-devushke/
         read-timeout: 5000
