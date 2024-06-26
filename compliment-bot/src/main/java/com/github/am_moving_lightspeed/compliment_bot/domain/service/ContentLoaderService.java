@@ -30,7 +30,10 @@ public class ContentLoaderService {
     public void loadContent() {
         var cacheFile = contentCacheService.getCachedFileDescriptor();
         if (dropboxService.downloadFile(cacheFile)) {
-            return;
+            if (contentCacheService.hasCachedContent()) {
+                return;
+            }
+            log.info("Backup content is empty");
         }
 
         log.info("Started content loading at {}", LocalDateTime.now());
