@@ -72,12 +72,6 @@ public class Constants {
     }
 
     @UtilityClass
-    public static class Backup {
-
-        public static final String BACKUP_FILE_NAME = "backup.json";
-    }
-
-    @UtilityClass
     public static class DateTime {
 
         public static final LocalTime RIGHT_BEFORE_MIDNIGHT = MIDNIGHT.minusNanos(1);

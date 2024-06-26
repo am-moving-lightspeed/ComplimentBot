@@ -54,6 +54,10 @@ public class ContentCacheService {
         this.storageProperties = storageProperties;
     }
 
+    public boolean hasCachedContent() {
+        return !getCachedContent().getPendingCompliments().isEmpty();
+    }
+
     public Set<Compliment> getCompliments() {
         return getCachedContent().getPendingCompliments().stream()
                                  .map(complimentConverter::convertBack)
