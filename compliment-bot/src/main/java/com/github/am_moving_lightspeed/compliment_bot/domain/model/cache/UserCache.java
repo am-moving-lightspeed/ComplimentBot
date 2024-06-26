@@ -1,4 +1,4 @@
-package com.github.am_moving_lightspeed.compliment_bot.persistence.model;
+package com.github.am_moving_lightspeed.compliment_bot.domain.model.cache;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class UserDao {
+public class UserCache {
 
     private Long id;
 }

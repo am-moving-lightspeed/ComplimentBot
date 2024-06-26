@@ -5,7 +5,7 @@ import static java.util.stream.Collectors.toSet;
 
 import com.github.am_moving_lightspeed.compliment_bot.domain.model.Compliment;
 import com.github.am_moving_lightspeed.compliment_bot.integration.service.ContentSupplierService;
-import com.github.am_moving_lightspeed.compliment_bot.persistence.service.StoragePersistenceService;
+import com.github.am_moving_lightspeed.compliment_bot.integration.service.DropboxService;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -14,8 +14,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
@@ -24,13 +22,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ContentLoaderService {
 
+    private final ContentCacheService contentCacheService;
+    private final DropboxService dropboxService;
     private final List<ContentSupplierService> contentSupplierServices;
-    private final StoragePersistenceService storagePersistenceService;
     private final TaskExecutor integrationClientTaskExecutor;
 
-    @EventListener(ApplicationReadyEvent.class)
     public void loadContent() {
-        if (storagePersistenceService.hasContent()) {
+        var cacheFile = contentCacheService.getCachedFileDescriptor();
+        if (dropboxService.downloadFile(cacheFile)) {
             return;
         }
 
@@ -41,7 +40,7 @@ public class ContentLoaderService {
                                              .map(CompletableFuture::join)
                                              .flatMap(Collection::stream)
                                              .collect(toSet());
-        storagePersistenceService.saveCompliments(content);
+        contentCacheService.cacheCompliments(content);
 
         log.info("Content loaded at {}. Total entries: {}", LocalDateTime.now(), content.size());
     }
@@ -51,7 +50,7 @@ public class ContentLoaderService {
     }
 
     private Set<Compliment> handleError(Throwable throwable) {
-        log.error("Failed to fetch content. Nested exception:", throwable);
+        log.error("Failed to fetch content", throwable);
         return Set.of();
     }
 }

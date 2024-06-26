@@ -16,10 +16,10 @@ public class ConverterDecorator<S, D> implements Converter<S, D> {
     }
 
     @Override
-    public S reverseConvert(D source) {
+    public S convertBack(D source) {
         if (source == null) {
             return null;
         }
-        return delegate.reverseConvert(source);
+        return delegate.convertBack(source);
     }
 }

@@ -32,6 +32,9 @@ application:
       infoniac:
         url: https://www.infoniac.ru/news/150-komplimentov-cheloveku-priyatnye-slova-kotorye-podnimut-nastroenie-lyubomu.html
         read-timeout: 5000
+    dropbox:
+      root-dir: ''
   storage:
     backup-time: '18:00'  # UTC
-    location: /opt/tg-bots/compliment-bot/storage.json
+    cache-file-name: storage.json
+    cache-location: /opt/tg-bots/compliment-bot/cache/${application.storage.cache-file-name}

@@ -13,11 +13,13 @@ public class Constants {
 
         public static final String BOT_API_EXCEPTION = "bot.api.exception";
         public static final String FAILED_TO_FETCH_CONTENT = "failed.to.fetch.content";
-        public static final String FAILED_TO_READ_FROM_STORAGE = "failed.to.read.from.storage";
-        public static final String FAILED_TO_FLUSH_TO_STORAGE = "failed.to.flush.to.storage";
+        public static final String FAILED_TO_READ_FROM_CACHE = "failed.to.read.from.cache";
+        public static final String FAILED_TO_CACHE = "failed.to.cache";
         public static final String FAILED_TO_HANDLE_USER_REQUEST = "failed.to.handle.user.request";
-        public static final String FAILED_TO_OBTAIN_STORAGE_FILE_DESCRIPTOR
-            = "failed.to.obtain.storage.file.descriptor";
+        public static final String FAILED_TO_OBTAIN_CACHED_FILE_DESCRIPTOR
+            = "failed.to.obtain.cached.file.descriptor";
+        public static final String FAILED_TO_UPLOAD_BACKUP_CONTENT = "failed.to.upload.backup.content";
+        public static final String FAILED_TO_DOWNLOAD_SAVED_CONTENT = "failed.to.upload.backup.content";
     }
 
     @UtilityClass
@@ -79,7 +81,6 @@ public class Constants {
     public static class DateTime {
 
         public static final LocalTime RIGHT_BEFORE_MIDNIGHT = MIDNIGHT.minusNanos(1);
-        public static final LocalTime RIGHT_AFTER_MIDNIGHT = MIDNIGHT.plusNanos(1);
     }
 
     @UtilityClass
