@@ -22,7 +22,7 @@ public class UpdateToRequestConverter implements Converter<Update, Request> {
     }
 
     @Override
-    public Update reverseConvert(Request source) {
+    public Update convertBack(Request source) {
         throw new UnsupportedOperationException();
     }
 }

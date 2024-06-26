@@ -4,5 +4,5 @@ public interface Converter<S, D> {
 
     D convert(S source);
 
-    S reverseConvert(D source);
+    S convertBack(D source);
 }

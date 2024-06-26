@@ -1,13 +1,12 @@
 package com.github.am_moving_lightspeed.compliment_bot.domain.service;
 
-import static com.github.am_moving_lightspeed.compliment_bot.util.Constants.DateTime.RIGHT_AFTER_MIDNIGHT;
 import static com.github.am_moving_lightspeed.compliment_bot.util.Constants.DateTime.RIGHT_BEFORE_MIDNIGHT;
+import static java.time.LocalTime.MIDNIGHT;
 import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ISO_TIME;
 
 import com.github.am_moving_lightspeed.compliment_bot.config.model.BroadcastProperties;
 import com.github.am_moving_lightspeed.compliment_bot.domain.service.bot.BotService;
-import com.github.am_moving_lightspeed.compliment_bot.persistence.service.StoragePersistenceService;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +22,8 @@ public class BroadcastService {
 
     private final BotService botService;
     private final BroadcastProperties properties;
+    private final ContentCacheService contentCacheService;
     private final ContentManagerService contentManagerService;
-    private final StoragePersistenceService storagePersistenceService;
     private final TaskExecutor broadcastTaskExecutor;
     private final TaskScheduler taskScheduler;
 
@@ -53,7 +52,7 @@ public class BroadcastService {
         if (broadcastTime.isAfter(blackoutStart) && broadcastTime.isBefore(RIGHT_BEFORE_MIDNIGHT)) {
             return true;
         } else {
-            return broadcastTime.isAfter(RIGHT_AFTER_MIDNIGHT) && broadcastTime.isBefore(blackoutEnd);
+            return broadcastTime.isAfter(MIDNIGHT) && broadcastTime.isBefore(blackoutEnd);
         }
     }
 
@@ -64,9 +63,8 @@ public class BroadcastService {
 
     private void broadcast() {
         var compliment = contentManagerService.fetchNextPendingCompliment();
-        contentManagerService.saveComplimentAsUsed(compliment);
+        var recipients = contentCacheService.getUsers();
 
-        var recipients = storagePersistenceService.getUsers();
         for (var recipient : recipients) {
             broadcastTaskExecutor.execute(() -> {
                 var chatId = recipient.getId().toString();

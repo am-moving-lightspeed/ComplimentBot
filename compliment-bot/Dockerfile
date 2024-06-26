@@ -20,8 +20,7 @@ RUN --mount=type=bind,source=pom.xml,target=pom.xml \
 
 FROM eclipse-temurin:17-jre-jammy AS execution
 
-ARG UID=5005
-ARG USERNAME=service-user
+ARG USERNAME=bot-runner
 ARG SERVICE_DIR=/opt/tg-bots/compliment-bot
 
 WORKDIR $SERVICE_DIR
@@ -29,12 +28,10 @@ WORKDIR $SERVICE_DIR
 COPY --from=build /usr/local/build/bot.jar .
 
 RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
     --no-create-home \
-    --uid "${UID}" \
+    --disabled-password \
+    --shell "/sbin/nologin" \
+    --uid "5005" \
     $USERNAME
 
 RUN chown $USERNAME $SERVICE_DIR

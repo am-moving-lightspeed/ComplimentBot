@@ -7,7 +7,7 @@ import com.github.am_moving_lightspeed.compliment_bot.domain.model.User;
 import com.github.am_moving_lightspeed.compliment_bot.domain.model.bot.CommandHandlerResult;
 import com.github.am_moving_lightspeed.compliment_bot.domain.model.bot.Request;
 import com.github.am_moving_lightspeed.compliment_bot.domain.model.event.UserUnsubscribedEvent;
-import com.github.am_moving_lightspeed.compliment_bot.persistence.service.StoragePersistenceService;
+import com.github.am_moving_lightspeed.compliment_bot.domain.service.ContentCacheService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
@@ -16,14 +16,14 @@ import org.springframework.stereotype.Component;
 public class UnsubscribeCommandHandler extends BaseCommandHandler {
 
     private final ApplicationEventPublisher applicationEventPublisher;
-    private final StoragePersistenceService storagePersistenceService;
+    private final ContentCacheService contentCacheService;
 
     public UnsubscribeCommandHandler(MessageSource messages,
                                      ApplicationEventPublisher applicationEventPublisher,
-                                     StoragePersistenceService storagePersistenceService) {
+                                     ContentCacheService contentCacheService) {
         super(messages);
         this.applicationEventPublisher = applicationEventPublisher;
-        this.storagePersistenceService = storagePersistenceService;
+        this.contentCacheService = contentCacheService;
     }
 
     @Override
@@ -34,12 +34,12 @@ public class UnsubscribeCommandHandler extends BaseCommandHandler {
     @Override
     protected CommandHandlerResult handleInternally(Request request) {
         var userId = request.getUserId();
-        var exists = storagePersistenceService.getUsers().stream()
-                                              .anyMatch(user -> user.getId().equals(userId));
+        var exists = contentCacheService.getUsers().stream()
+                                        .anyMatch(user -> user.getId().equals(userId));
         if (!exists) {
             return CommandHandlerResult.empty();
         }
-        storagePersistenceService.removeUser(new User(userId));
+        contentCacheService.removeUser(new User(userId));
         applicationEventPublisher.publishEvent(new UserUnsubscribedEvent(userId));
 
         var responseMessage = getResponseMessage(BOT_UNSUBSCRIBE_COMMAND_RESPONSE);
