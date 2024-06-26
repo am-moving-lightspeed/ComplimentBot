@@ -10,8 +10,6 @@ import com.github.am_moving_lightspeed.compliment_bot.domain.service.bot.BotServ
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
@@ -27,7 +25,6 @@ public class BroadcastService {
     private final TaskExecutor broadcastTaskExecutor;
     private final TaskScheduler taskScheduler;
 
-    @EventListener(ApplicationReadyEvent.class)
     public void scheduleBroadcast() {
         var nextBroadcastTime = getNextBroadcastTime();
         taskScheduler.schedule(this::performBroadcastAndReschedule,
