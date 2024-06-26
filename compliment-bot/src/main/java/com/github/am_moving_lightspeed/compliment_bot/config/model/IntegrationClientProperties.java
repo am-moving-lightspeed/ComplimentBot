@@ -8,5 +8,14 @@ import lombok.Setter;
 public class IntegrationClientProperties {
 
     private String name;
-    private String accessToken;
+    private String refreshToken;
+    private OAuth2 oAuth2;
+
+    @Getter
+    @Setter
+    public static class OAuth2 {
+
+        private String clientId;
+        private String clientSecret;
+    }
 }

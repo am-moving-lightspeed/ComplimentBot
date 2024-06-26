@@ -31,6 +31,12 @@ public class Constants {
     }
 
     @UtilityClass
+    public static class Strings {
+
+        public static final String EMPTY = "";
+    }
+
+    @UtilityClass
     public static class Integration {
 
         @UtilityClass

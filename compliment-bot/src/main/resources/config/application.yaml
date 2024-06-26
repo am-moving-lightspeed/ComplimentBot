@@ -13,8 +13,8 @@ application:
         core-pool-size: 2
   bot:
     admin:
-      id: ${APP_ADMIN_ID:}
-    token: ${APP_BOT_TOKEN:}
+      id: ${APP_ADMIN_ID}
+    token: ${APP_BOT_TOKEN}
     username: ValentinGentlemanBot
   broadcast:
     blackout:
@@ -25,7 +25,10 @@ application:
     client:
       dropbox:
         name: compliment-bot-backup-client
-        access-token: ${APP_DBX_ACCESS_TOKEN:}
+        refresh-token: ${APP_DBX_REFRESH_TOKEN}
+        oauth2:
+          client-id: ${APP_DBX_CLIENT_ID}
+          client-secret: ${APP_DBX_CLIENT_SECRET}
       romantic-collection:
         url: https://love.romanticcollection.ru/blog/500-trogatelnyh-komplimentov-devushke/
         read-timeout: 5000
